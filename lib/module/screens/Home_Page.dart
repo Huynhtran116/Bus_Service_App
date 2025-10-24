@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:busservice/provider/auth_provider.dart';
-
 import 'Login_Screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await auth.logout();
-
+              // Chuyển về trang đăng nhập
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => LoginPage()),
@@ -31,20 +31,69 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: user != null
-            ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Chào mừng bạn đến EduBus!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text('👤 Họ tên: ${user["profile"]?["hoten"] ?? "Không có"}'),
-            Text('📧 Email: ${user["email"] ?? "Không có"}'),
-            if (user["role"] != null) Text('🧩 Vai trò: ${user["role"]}'),
-          ],
+            ? SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Avatar người dùng
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: user.profile.avatar.isNotEmpty
+                    ? NetworkImage(user.profile.avatar)
+                    : const AssetImage('assets/images/default_avatar.png')
+                as ImageProvider,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Chào mừng bạn đến EduBus!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Hiển thị thông tin tài khoản
+              infoRow("Họ tên", user.profile.hoten),
+              infoRow("Email", user.email),
+              infoRow("Vai trò", user.role),
+              infoRow("SĐT", user.profile.sdt),
+              infoRow("Địa chỉ", user.profile.diachi),
+              infoRow("CCCD", user.profile.cccd),
+            ],
+          ),
         )
-            : const Text('Không có thông tin người dùng.'),
+            : const Text(
+          'Không có thông tin người dùng.',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+
+  Widget infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "$label: ",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value.isNotEmpty ? value : "Không có",
+              style: const TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
