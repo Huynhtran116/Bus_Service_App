@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../provider/auth_provider.dart';
 
+import 'ForgotPass_Screen.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -172,7 +173,13 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) =>  ForgotPasswordScreen()),
+                    );
+                  },
                   child: const Text('Quên mật khẩu ?',
                       style: TextStyle(color: Color(0xFFA1A2A4))),
                 ),
